@@ -18,21 +18,21 @@ public class ErrorHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleIllegalArgument(final IllegalArgumentException e) {
-        log.debug(e.getMessage());
+        logger.debug(e.getMessage());
         return Map.of("error", e.getMessage());
     }
 
     @ExceptionHandler(DublicateException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public Map<String, String> handleDublicate(final DublicateException e) {
-        log.debug(e.getMessage());
+        logger.debug(e.getMessage());
         return Map.of("error", e.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleNotFoundExeption(final NotFoundException e) {
-        log.debug(e.getMessage());
+        logger.debug(e.getMessage());
         return Map.of("error", e.getMessage());
     }
 }
