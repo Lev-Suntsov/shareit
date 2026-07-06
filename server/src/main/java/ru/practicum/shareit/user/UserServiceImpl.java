@@ -23,11 +23,12 @@ public class UserServiceImpl implements UserService {
     public UserDto saveUser(UserDto user) {
         List<User> users = repository.findAll();
 
-        for(User u: users){
+        for (User u: users) {
             if (u.getEmail().equals(user.getEmail())) {
                 throw new DublicateException("данный email уже зарегистрирован");
             }
         }
+
         return UserMapper.mapToUserDto(repository.save(UserMapper.mapToUser(user)));
     }
 

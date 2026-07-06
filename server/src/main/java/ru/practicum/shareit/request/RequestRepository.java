@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface RequestRepository  extends JpaRepository<Request, Long> {
     List<Request> findAllByUserIdOrderByCreatedDesc(Long userId);
+
     List<Request> findAllByUserIdNotOrderByCreatedDesc(Long userId);
 }

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.item.ItemDto;
 import ru.practicum.shareit.item.ItemServiceImpl;
-import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserDto;
 import ru.practicum.shareit.user.UserServiceImpl;
 
@@ -29,7 +28,7 @@ public class RequestServiceImpl implements RequestService {
         UserDto user = userService.findUserById(userId);
         dto.setUserId(userId);
         dto.setCreated(LocalDateTime.now());
-        return RequestMapper.mapToRequestDto(repository.save( RequestMapper.mapToRequest(dto)));
+        return RequestMapper.mapToRequestDto(repository.save(RequestMapper.mapToRequest(dto)));
     }
 
     @Override
@@ -51,7 +50,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> requests = repository
                 .findAllByUserIdNotOrderByCreatedDesc(userId);
 
-        if(requests.isEmpty()) {
+        if (requests.isEmpty()) {
             return List.of();
         }
 
@@ -59,7 +58,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public RequestDtoForGet getById(Long requestId){
+    public RequestDtoForGet getById(Long requestId) {
         Request request = repository.findById(requestId).orElseThrow();
         ItemDto item = null;
         if (request.getItemId() != null) {
@@ -69,7 +68,7 @@ public class RequestServiceImpl implements RequestService {
         return RequestMapper.mapToRequestDtoForGet(request, item);
     }
 
-    private  List<RequestDtoForGet> getItemDtoAndReturnRequest(List<Request> requests){
+    private  List<RequestDtoForGet> getItemDtoAndReturnRequest(List<Request> requests) {
         Set<Long> itemIds = requests.stream().map(Request::getItemId).filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
