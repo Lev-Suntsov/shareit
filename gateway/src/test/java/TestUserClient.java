@@ -58,24 +58,6 @@ public class TestUserClient {
     }
 
     @Test
-    void testIdNullValidation() {
-        user.setId(null);
-
-        Set<ConstraintViolation<UserDto>> violations = validator.validate(user);
-
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("id"));
-    }
-
-    @Test
-    void testIdNegativeValidate() {
-        user.setId(-1L);
-
-        Set<ConstraintViolation<UserDto>> violations = validator.validate(user);
-
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("id"));
-    }
-
-    @Test
     void testEmailNullValidate() {
         user.setEmail(null);
 

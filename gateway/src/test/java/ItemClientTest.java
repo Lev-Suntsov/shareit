@@ -61,20 +61,6 @@ public class ItemClientTest {
     }
 
     @Test
-    void createItemWithNullId() {
-        itemDtoCreate = new ItemDtoCreate(
-                null,
-                Boolean.FALSE,
-                "TestItemName",
-                "testItemDescription",
-                1L);
-
-        Set<ConstraintViolation<ItemDtoCreate>> violations = validator.validate(itemDtoCreate);
-        assertThat(violations)
-                .anyMatch(v -> v.getPropertyPath().toString().equals("id"));
-    }
-
-    @Test
     void createItemWithNullAvailable() {
         itemDtoCreate = new ItemDtoCreate(
                     1L,

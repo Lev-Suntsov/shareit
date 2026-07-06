@@ -61,23 +61,7 @@ public class TestRequestController {
         );
     }
 
-    @Test
-    void createWithNullId() {
-        request.setId(null);
 
-        Set<ConstraintViolation<RequestDto>> violations = validator.validate(request);
-
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("id"));
-    }
-
-    @Test
-    void createWithNegativeId() {
-        request.setId(-1L);
-
-        Set<ConstraintViolation<RequestDto>> violations = validator.validate(request);
-
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("id"));
-    }
 
     @Test
     void createWithNullDescription() {

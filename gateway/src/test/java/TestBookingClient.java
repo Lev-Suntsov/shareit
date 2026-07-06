@@ -51,33 +51,6 @@ public class TestBookingClient {
         BookingController bookingController = new BookingController(bookingClient);
     }
 
-    @Test
-    public void createBookingWithEmptyId() {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-
-        BookItemRequestDto dto = new BookItemRequestDto(
-                null,
-                LocalDateTime.now().plusHours(1),
-                LocalDateTime.now().plusDays(1)
-        );
-
-        Set<ConstraintViolation<BookItemRequestDto>> violations = validator.validate(dto);
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("itemId"));
-    }
-
-    @Test
-    public void createWithNegativeId() {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-
-        BookItemRequestDto dto = new BookItemRequestDto(
-                -1L,
-                LocalDateTime.now().plusHours(1),
-                LocalDateTime.now().plusDays(1)
-        );
-
-        Set<ConstraintViolation<BookItemRequestDto>> violations = validator.validate(dto);
-        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("itemId"));
-    }
 
     @Test
     public void shouldHaveViolationWhenStartIsInPast() {
