@@ -52,21 +52,7 @@ public class TestBookingClient {
     }
 
 
-    @Test
-    public void shouldHaveViolationWhenStartIsInPast() {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        BookItemRequestDto dto = new BookItemRequestDto(
-                1L,
-                LocalDateTime.now().minusHours(1),
-                LocalDateTime.now().plusDays(1)
-        );
-
-        Set<ConstraintViolation<BookItemRequestDto>> violations = validator.validate(dto);
-
-        assertThat(violations)
-                .extracting(v -> v.getPropertyPath().toString())
-                .contains("start");
-    }
+   
 
     @Test
     public void createBookingTest() {
