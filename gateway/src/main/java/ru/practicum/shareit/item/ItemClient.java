@@ -47,6 +47,7 @@ public class ItemClient extends BaseClient {
     public ResponseEntity<Object> search(String text) {
         return get("/search?text={text}", null, java.util.Map.of("text", text));
     }
+
     public ResponseEntity<Object> addComment(Long userId, Long itemId, CommentDto commentDto) {
         return post("/" + itemId + "/comment", userId, commentDto);
     }
