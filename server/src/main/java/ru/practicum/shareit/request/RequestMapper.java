@@ -2,7 +2,7 @@ package ru.practicum.shareit.request;
 
 import ru.practicum.shareit.item.ItemDto;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface RequestMapper {
     static RequestDto mapToRequestDto(Request request) {
@@ -25,16 +25,15 @@ public interface RequestMapper {
         return request;
     }
 
-    static RequestDtoForGet mapToRequestDtoForGet(Request request, ItemDto item) {
+    static RequestDtoForGet mapToRequestDtoForGet(Request request, List<ItemDto> item) {
         RequestDtoForGet dto = new RequestDtoForGet();
         dto.setId(request.getId());
         dto.setCreated(request.getCreated());
-        ArrayList<ItemDto> itemDtos = new ArrayList<>();
-        itemDtos.add(item);
-
         if (item != null) {
-            dto.setItemName(item.getName());
-            dto.setItems(itemDtos);
+            dto.setItems(item);
+        } else {
+            // вместо null возвращать пустой список
+            dto.setItems(List.of());
         }
 
         dto.setDescription(request.getDescription());

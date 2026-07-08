@@ -12,6 +12,7 @@ public interface ItemMapper {
         dto.setDescription(item.getDescription());
         dto.setAvailable(item.isAvailable());
         dto.setComments(item.getComments().stream().map(CommentMapper::toDto).toList());
+        dto.setRequestId(item.getRequestId());
         return dto;
     }
 
@@ -24,6 +25,7 @@ public interface ItemMapper {
         item.setUserId(dto.getUserId());
         item.setComments(dto.getComments().stream().map(commentDto ->  CommentMapper.toEntity(commentDto, ItemMapper.mapToItem(dto, user),
                 UserMapper.mapToUser(user))).toList());
+        item.setRequestId(dto.getRequestId());
         return item;
     }
 }

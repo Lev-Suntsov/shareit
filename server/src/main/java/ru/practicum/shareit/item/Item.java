@@ -33,6 +33,9 @@ public class Item {
     @OneToMany(mappedBy = "item")
     private List<Comment> comments = new ArrayList<>();
 
+    @Column(name = "request_id")
+    private Long requestId;
+
     public boolean isAvailable() {
         return available != null && available;
     }

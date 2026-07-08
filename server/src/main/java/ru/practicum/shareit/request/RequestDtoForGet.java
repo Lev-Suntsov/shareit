@@ -12,6 +12,5 @@ public class RequestDtoForGet {
     private String description;
     private LocalDateTime created;
     private List<ItemDto> items;
-    private String itemName;
     private Long userId;
 }

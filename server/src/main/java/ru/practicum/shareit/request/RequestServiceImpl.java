@@ -9,21 +9,18 @@ import ru.practicum.shareit.user.UserDto;
 import ru.practicum.shareit.user.UserServiceImpl;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class RequestServiceImpl implements RequestService {
+@Transactional(readOnly = true)
+public class RequestServiceImpl {
     private final UserServiceImpl userService;
     private final RequestRepository repository;
     private final ItemServiceImpl itemService;
 
     @Transactional
-    @Override
     public RequestDto add(Long userId, RequestDto dto) {
         UserDto user = userService.findUserById(userId);
         dto.setUserId(userId);
@@ -31,7 +28,6 @@ public class RequestServiceImpl implements RequestService {
         return RequestMapper.mapToRequestDto(repository.save(RequestMapper.mapToRequest(dto)));
     }
 
-    @Override
     public List<RequestDtoForGet> get(Long userId) {
         userService.findUserById(userId);
         List<Request> requests = repository.findAllByUserIdOrderByCreatedDesc(userId);
@@ -43,7 +39,6 @@ public class RequestServiceImpl implements RequestService {
         return getItemDtoAndReturnRequest(requests);
     }
 
-    @Override
     public List<RequestDtoForGet> getOtherUsersRequests(Long userId) {
         userService.findUserById(userId);
 
@@ -57,25 +52,26 @@ public class RequestServiceImpl implements RequestService {
         return getItemDtoAndReturnRequest(requests);
     }
 
-    @Override
     public RequestDtoForGet getById(Long requestId) {
         Request request = repository.findById(requestId).orElseThrow();
-        ItemDto item = null;
-        if (request.getItemId() != null) {
-            item = itemService.getItem(request.getItemId(), request.getUserId());
-        }
-
-        return RequestMapper.mapToRequestDtoForGet(request, item);
+        return RequestMapper.mapToRequestDtoForGet(request, itemService.findAllByRequestId(requestId));
     }
 
-    private  List<RequestDtoForGet> getItemDtoAndReturnRequest(List<Request> requests) {
-        Set<Long> itemIds = requests.stream().map(Request::getItemId).filter(Objects::nonNull)
+    private List<RequestDtoForGet> getItemDtoAndReturnRequest(List<Request> requests) {
+        Set<Long> requestIds = requests.stream()
+                .map(Request::getId)
                 .collect(Collectors.toSet());
 
-        Map<Long, ItemDto> itemsById = itemService.findAllByIds(itemIds).stream().collect(Collectors.toMap(ItemDto::getId, item -> item));
+        Map<Long, List<ItemDto>> itemsByRequestId = itemService.findAllByRequestIdIn(requestIds).stream()
+                .collect(Collectors.groupingBy(
+                        ItemDto::getRequestId
+                ));
 
-        return requests.stream().map(
-                request -> RequestMapper.mapToRequestDtoForGet(request, itemsById.get(request.getItemId()))
-        ).toList();
+        return requests.stream()
+                .map(request -> RequestMapper.mapToRequestDtoForGet(
+                        request,
+                        itemsByRequestId.getOrDefault(request.getId(), List.of())
+                ))
+                .toList();
     }
 }

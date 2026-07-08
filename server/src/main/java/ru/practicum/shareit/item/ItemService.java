@@ -22,4 +22,7 @@ public interface ItemService {
     List<ItemDto> getAllItemsByOwner(Long ownerId);
 
     List<ItemDto> findAllByIds(Set<Long> ids);
+
+    List<ItemDto> findAllByRequestId(Long requestId);
+
 }

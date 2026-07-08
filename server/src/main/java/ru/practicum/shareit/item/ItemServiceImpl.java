@@ -8,7 +8,9 @@ import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.dto.BookingDtoOut;
+import ru.practicum.shareit.request.RequestRepository;
 import ru.practicum.shareit.user.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository repository;
@@ -27,6 +30,7 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
+    private final RequestRepository requestRepository;
 
     @Override
     @Transactional
@@ -34,7 +38,14 @@ public class ItemServiceImpl implements ItemService {
         userService.findUserById(userId);
         itemDto.setUserId(userId);
 
+        if (itemDto.getRequestId() != null) {
+            requestRepository.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> new NotFoundException("Запрос не найден"));
+        }
+
         Item item = ItemMapper.mapToItem(itemDto, userService.findUserById(userId));
+        item.setRequestId(itemDto.getRequestId());
+
         return ItemMapper.mapToItemDto(repository.save(item));
     }
 
@@ -211,4 +222,28 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> findAllByIds(Set<Long> ids) {
         return  repository.findAllById(ids).stream().map(ItemMapper::mapToItemDto).toList();
     }
+
+    public List<ItemDto> findAllByRequestIdIn(Set<Long> requestIds) {
+        List<Item> items = repository.findAllByRequestIdIn(requestIds);
+
+        log.info("findAllByRequestIdIn: requestIds={}", requestIds);
+        log.info("findAllByRequestIdIn: items from db={}", items);
+
+        List<ItemDto> result = items.stream()
+                .map(item -> {
+                    ItemDto dto = ItemMapper.mapToItemDto(item);
+                    log.info("mapping item={} to dto={}", item, dto);
+                    return dto;
+                })
+                .toList();
+
+        log.info("findAllByRequestIdIn: result dto={}", result);
+        return result;
+    }
+
+    @Override
+    public List<ItemDto> findAllByRequestId(Long requestId) {
+        return repository.findAllByRequestId(requestId).stream().map(ItemMapper::mapToItemDto).toList();
+    }
+
 }
