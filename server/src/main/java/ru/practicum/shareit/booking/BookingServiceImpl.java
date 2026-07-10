@@ -34,17 +34,6 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingDtoOut save(BookingDtoIn dto) {
 
-        if (dto.getItemId() == null) {
-            throw new IllegalArgumentException("id вещи не может быть пустым");
-        }
-        if (dto.getStart() == null || dto.getEnd() == null) {
-            throw new IllegalArgumentException("Дата начала и конца обязательны");
-        }
-
-        if (!dto.getStart().before(dto.getEnd())) {
-            throw new IllegalArgumentException("Дата окончания должна быть позже даты начала");
-        }
-
         Item item = itemRepository.findById(dto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена id = " + dto.getItemId()));
         userService.findUserById(dto.getBookerId());

@@ -15,13 +15,6 @@ import java.util.Map;
 public class ErrorHandler {
     private static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleIllegalArgument(final IllegalArgumentException e) {
-        logger.debug(e.getMessage());
-        return Map.of("error", e.getMessage());
-    }
-
     @ExceptionHandler(DublicateException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public Map<String, String> handleDublicate(final DublicateException e) {
